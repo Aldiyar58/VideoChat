@@ -19,9 +19,10 @@ _name_of_sid = {} # stores display name of users
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH1")
         room_id = request.form['room_id']
         return redirect(url_for("entry_checkpoint", room_id=room_id))
-
+    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH2")
     return render_template("home.html")
 
 
@@ -39,8 +40,10 @@ def entry_checkpoint(room_id):
         mute_audio = request.form['mute_audio']
         mute_video = request.form['mute_video']
         session[room_id] = {"name": display_name, "mute_audio": mute_audio, "mute_video": mute_video}
+        print("HELLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOO3")
+        print(session[room_id])
         return redirect(url_for("enter_room", room_id=room_id))
-
+    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH4")
     return render_template("chatroom_checkpoint.html", room_id=room_id)
 
 
