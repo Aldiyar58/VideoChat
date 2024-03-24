@@ -43,6 +43,7 @@ def entry_checkpoint(room_id):
         mute_video = request.form['mute_video']
         session[room_id] = {"name": display_name, "mute_audio": mute_audio, "mute_video": mute_video}
         print("HELLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOO3")
+        print(room_id)
         print(session[room_id])
         return redirect(url_for("enter_room", room_id=room_id))
     print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH4")
