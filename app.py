@@ -61,6 +61,23 @@ def index():
     return render_template("home.html")
 
 
+@app.route("/find/companion/<string:username>/<string:language>/<int:language_level>/", methods=["GET", "POST"])
+def find_companion(username, language, language_level):
+    room = Room.find_suitable_room(language=language, language_level=language)  # todo: companion should be one level higher
+    if room:
+        return redirect(url_for(endpoint="enter_room", room_id=room.room_id))
+    else:
+        room_id = username
+        new_room = Room(
+            room_id=room_id,
+            username=username,
+            language=language,
+            language_level=language_level
+        )
+        new_room.save()
+        redirect(url_for(endpoint="entry_checkpoint", room_id=room_id))
+
+
 @app.route("/room/<string:room_id>/")
 def enter_room(room_id):
     if room_id not in session:
