@@ -73,7 +73,7 @@ def index():
 def find_companion(username, language, language_level):
     room = Room.find_suitable_room(language=language, language_level=language_level)  # todo: companion should be one level higher
     if room:
-        return redirect(url_for(endpoint="enter_room", room_id=room.room_id, language=language))
+        return redirect(url_for(endpoint="enter_room", room_id=room.room_id))
     else:
         room_id = username
         new_room = Room(
@@ -83,13 +83,13 @@ def find_companion(username, language, language_level):
             language_level=language_level
         )
         new_room.save()
-        return redirect(url_for(endpoint="entry_checkpoint", room_id=room_id, language=language))
+        return redirect(url_for(endpoint="entry_checkpoint", room_id=room_id))
 
 
-@app.route("/room/<string:room_id>/<string:language>/")
-def enter_room(room_id, language):
+@app.route("/room/<string:room_id>/")
+def enter_room(room_id):
     if room_id not in session:
-        return redirect(url_for("entry_checkpoint", room_id=room_id, language=language))
+        return redirect(url_for("entry_checkpoint", room_id=room_id))
     # prompt = f"дай только пять вопросов на {language} для начало и развите разгавора с другим человеком инстранцом."
     # print(prompt)
     # response = client.chat.completions.create(  # Этот метод отправляет запрос на сервер OpenAI и возвращает ответ.
@@ -105,13 +105,13 @@ def enter_room(room_id, language):
                            mute_audio=session[room_id]["mute_audio"], mute_video=session[room_id]["mute_video"])
 
 
-@app.route("/room/<string:room_id>/<string:language>/checkpoint/", methods=["GET", "POST"])
-def entry_checkpoint(room_id, language):
+@app.route("/room/<string:room_id>/checkpoint/", methods=["GET", "POST"])
+def entry_checkpoint(room_id):
     if request.method == "POST":
         display_name = request.form['display_name']
         mute_audio = request.form['mute_audio']
         mute_video = request.form['mute_video']
-        session[room_id] = {"name": display_name, "language": language, "mute_audio": mute_audio, "mute_video": mute_video}
+        session[room_id] = {"name": display_name, "mute_audio": mute_audio, "mute_video": mute_video}
         return redirect(url_for("enter_room", room_id=room_id))
     return render_template("chatroom_checkpoint.html", room_id=room_id)
 
