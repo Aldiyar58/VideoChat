@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from extensions import db, socketio
 
 # Next two lines are for the issue: https://github.com/miguelgrinberg/python-engineio/issues/142
 from engineio.payload import Payload
@@ -8,10 +10,12 @@ Payload.max_decode_packets = 200
 
 app = Flask(__name__)
 CORS(app)
-app.config['SECRET_KEY'] = "thisismys3cr3tk3y"
+app.config['SECRET_KEY'] = "thisismys3cr3tk3yrree"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://default:5lRaUgW1bLzo@ep-square-wind-a4xxqxcv-pooler.us-east-1.aws.neon.tech/verceldb?sslmode=require'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-socketio = SocketIO(app)
-
+db.init_app(app)
+socketio.init_app(app)
 
 _users_in_room = {} # stores room wise user list
 _room_of_sid = {} # stores room joined by an used
@@ -21,10 +25,8 @@ _name_of_sid = {} # stores display name of users
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH1")
         room_id = request.form['room_id']
         return redirect(url_for("entry_checkpoint", room_id=room_id))
-    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH2")
     return render_template("home.html")
 
 
@@ -42,11 +44,7 @@ def entry_checkpoint(room_id):
         mute_audio = request.form['mute_audio']
         mute_video = request.form['mute_video']
         session[room_id] = {"name": display_name, "mute_audio": mute_audio, "mute_video": mute_video}
-        print("HELLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOO3")
-        print(room_id)
-        print(session[room_id])
         return redirect(url_for("enter_room", room_id=room_id))
-    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH4")
     return render_template("chatroom_checkpoint.html", room_id=room_id)
 
 
@@ -58,7 +56,6 @@ def on_connect():
 
 @socketio.on("join-room")
 def on_join_room(data):
-    print(data)
     sid = request.sid
     room_id = data["room_id"]
     display_name = session[room_id]["name"]
@@ -113,6 +110,7 @@ def on_data(data):
     if data["type"] != "new-ice-candidate":
         print('{} message from {} to {}'.format(data["type"], sender_sid, target_sid))
     socketio.emit('data', data, room=target_sid)
+
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)

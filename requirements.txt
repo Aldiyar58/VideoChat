@@ -3,3 +3,5 @@ Flask-SocketIO
 gunicorn
 eventlet
 flask-cors
+SQLAlchemy
+flask_sqlalchemy
