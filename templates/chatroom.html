@@ -40,13 +40,15 @@
 </head>
 <body>
     
-    <div class="heading mb-4">
-        <h1 class="display-4">Языковая рулетка</h1>
-        <div class="room-info">
-            <h3>Комната: <span class="heading-mark">{{room_id}}</span></h3>
-            <h5>Вы зашли как: <span class="heading-mark">{{display_name}}</span></h5>
-            <div id="questions" class="">{{questions}}</div>
+    <div class="heading mb-4 row">
+        <div class="col">
+            <h1 class="display-4">Языковая рулетка</h1>
+            <div class="room-info">
+                <h3>Комната: <span class="heading-mark">{{room_id}}</span></h3>
+                <h5>Вы зашли как: <span class="heading-mark">{{display_name}}</span></h5>
+            </div>
         </div>
+        <div id="questions" class="col">{{questions}}</div>
     </div>
         
     <div class="container-fluid px-0 mx-0">
