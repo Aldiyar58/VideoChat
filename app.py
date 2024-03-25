@@ -78,7 +78,7 @@ def find_companion(username, language, language_level):
             language_level=language_level
         )
         new_room.save()
-        redirect(url_for(endpoint="entry_checkpoint", room_id=room_id))
+        return redirect(url_for(endpoint="entry_checkpoint", room_id=room_id))
 
 
 @app.route("/room/<string:room_id>/")
