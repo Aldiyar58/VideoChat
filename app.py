@@ -103,7 +103,7 @@ def enter_room(room_id, language):
     print(response.choices[0].message)
 
     return render_template("chatroom.html", room_id=room_id, display_name=session[room_id]["name"],
-                           mute_audio=session[room_id]["mute_audio"], mute_video=session[room_id]["mute_video"])
+                           mute_audio=session[room_id]["mute_audio"], mute_video=session[room_id]["mute_video"], questions=response.choices[0].message)
 
 
 @app.route("/room/<string:room_id>/<string:language>/checkpoint/", methods=["GET", "POST"])
