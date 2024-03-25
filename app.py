@@ -34,7 +34,8 @@ class Room(db.Model):
             need_language = 'kaz'
 
         room = cls.query.filter_by(language=need_language, language_level=language_level).first()
-        room.delete()
+        if room is not None:
+            room.delete()
         return room
 
     def save(self):
