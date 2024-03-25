@@ -75,7 +75,7 @@ def find_companion(username, language, language_level):
     if room:
         return redirect(url_for(endpoint="enter_room", room_id=room.room_id, language=language))
     else:
-        room_id = username
+        room_id = os.urandom(5).hex()
         new_room = Room(
             room_id=room_id,
             username=username,
