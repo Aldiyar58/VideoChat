@@ -91,18 +91,20 @@ def enter_room(room_id, language):
     if room_id not in session:
         return redirect(url_for("entry_checkpoint", room_id=room_id, language=language))
     prompt = f"дай только пять вопросов на {language} для начало и развите разгавора с другим человеком инстранцом."
-    print(prompt)
     response = client.chat.completions.create(  # Этот метод отправляет запрос на сервер OpenAI и возвращает ответ.
         model="gpt-4-turbo-preview",
         messages=[
             {"role": "user", "content": prompt}
         ]
     )
-    print('HHHHHHHHHHHHHHHHHHHHHHHHEKEEEEEEEEEEEEEEEEKKKKKKKKLLLLLLLLLLLOOOOOOOOOOOO')
-    print(response.choices[0].message)
-
-    return render_template("chatroom.html", room_id=room_id, display_name=session[room_id]["name"],
-                           mute_audio=session[room_id]["mute_audio"], mute_video=session[room_id]["mute_video"], questions=response.choices[0].message)
+    txt = response.choices[0].message.content
+    txt = txt.replace('\n', '<br>')
+    return render_template("chatroom.html",
+                           room_id=room_id,
+                           display_name=session[room_id]["name"],
+                           mute_audio=session[room_id]["mute_audio"],
+                           mute_video=session[room_id]["mute_video"],
+                           questions=txt)
 
 
 @app.route("/room/<string:room_id>/<string:language>/checkpoint/", methods=["GET", "POST"])
