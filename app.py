@@ -34,11 +34,11 @@ class Room(db.Model):
             need_language = 'kaz'
 
         rooms = cls.query.filter_by(language=need_language).all()
-        if rooms is not None:
+        if rooms:
             room = list(filter(lambda ro: ro.language_level == language_level, rooms))[0]
             room.delete()
             return room
-        return rooms
+        return None
 
     def save(self):
         db.session.add(self)
