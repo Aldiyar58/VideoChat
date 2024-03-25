@@ -36,6 +36,7 @@ class Room(db.Model):
         room = cls.query.filter_by(language=need_language, language_level=language_level).first()
         room.delete()
         return room
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -47,9 +48,9 @@ class Room(db.Model):
 
 socketio = SocketIO(app)
 
-_users_in_room = {} # stores room wise user list
-_room_of_sid = {} # stores room joined by an used
-_name_of_sid = {} # stores display name of users
+_users_in_room = {}  # stores room wise user list
+_room_of_sid = {}  # stores room joined by a used
+_name_of_sid = {}  # stores display name of users
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -64,7 +65,8 @@ def index():
 def enter_room(room_id):
     if room_id not in session:
         return redirect(url_for("entry_checkpoint", room_id=room_id))
-    return render_template("chatroom.html", room_id=room_id, display_name=session[room_id]["name"], mute_audio=session[room_id]["mute_audio"], mute_video=session[room_id]["mute_video"])
+    return render_template("chatroom.html", room_id=room_id, display_name=session[room_id]["name"],
+                           mute_audio=session[room_id]["mute_audio"], mute_video=session[room_id]["mute_video"])
 
 
 @app.route("/room/<string:room_id>/checkpoint/", methods=["GET", "POST"])
@@ -102,11 +104,11 @@ def on_join_room(data):
     # add to user list maintained on server
     if room_id not in _users_in_room:
         _users_in_room[room_id] = [sid]
-        emit("user-list", {"my_id": sid}) # send own id only
+        emit("user-list", {"my_id": sid})   # send own id only
     else:
-        usrlist = {u_id:_name_of_sid[u_id] for u_id in _users_in_room[room_id]}
-        emit("user-list", {"list": usrlist, "my_id": sid}) # send list of existing users to the new member
-        _users_in_room[room_id].append(sid) # add new member to user list maintained on server
+        usrlist = {u_id: _name_of_sid[u_id] for u_id in _users_in_room[room_id]}
+        emit("user-list", {"list": usrlist, "my_id": sid})  # send list of existing users to the new member
+        _users_in_room[room_id].append(sid)  # add new member to user list maintained on server
 
     print("\nusers: ", _users_in_room, "\n")
 
@@ -143,8 +145,8 @@ def on_data(data):
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.drop_all()
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.drop_all()
+    # with app.app_context():
+    #     db.create_all()
     socketio.run(app, debug=True)
