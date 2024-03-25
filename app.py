@@ -66,7 +66,7 @@ def index():
 
 @app.route("/find/companion/<string:username>/<string:language>/<int:language_level>/", methods=["GET", "POST"])
 def find_companion(username, language, language_level):
-    room = Room.find_suitable_room(language=language, language_level=language)  # todo: companion should be one level higher
+    room = Room.find_suitable_room(language=language, language_level=language_level)  # todo: companion should be one level higher
     if room:
         return redirect(url_for(endpoint="enter_room", room_id=room.room_id))
     else:
