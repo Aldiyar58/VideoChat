@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from extensions import db, socketio
 
 # Next two lines are for the issue: https://github.com/miguelgrinberg/python-engineio/issues/142
 from engineio.payload import Payload
@@ -14,8 +13,39 @@ app.config['SECRET_KEY'] = "thisismys3cr3tk3yrree"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://default:5lRaUgW1bLzo@ep-square-wind-a4xxqxcv-pooler.us-east-1.aws.neon.tech/verceldb?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
-socketio.init_app(app)
+db = SQLAlchemy(app)
+
+
+class Room(db.Model):
+    __tablename__ = 'room'
+    room_id = db.Column(db.String(), primary_key=True)
+    username = db.Column(db.String(), primary_key=True)
+    language = db.Column(db.String(), primary_key=True)
+    language_level = db.Column(db.Integer(), primary_key=True)
+
+    def __repr__(self):
+        return f'<Room "{self.room_id}"'
+
+    @classmethod
+    def find_suitable_room(cls, language, language_level):
+        if language == 'kaz':
+            need_language = 'eng'
+        else:
+            need_language = 'kaz'
+
+        room = cls.query.filter_by(language=need_language, language_level=language_level).first()
+        room.delete()
+        return room
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+socketio = SocketIO(app)
 
 _users_in_room = {} # stores room wise user list
 _room_of_sid = {} # stores room joined by an used
