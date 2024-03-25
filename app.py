@@ -63,10 +63,10 @@ _name_of_sid = {}  # stores display name of users
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == "POST":
-        room_id = request.form['room_id']
-        return redirect(url_for("entry_checkpoint", room_id=room_id))
-    return render_template("home.html")
+    # if request.method == "POST":
+    #     room_id = request.form['room_id']
+    #     return redirect(url_for("entry_checkpoint", room_id=room_id))
+    return render_template("index.html")
 
 
 @app.route("/find/companion/<string:username>/<string:language>/<int:language_level>/", methods=["GET", "POST"])
