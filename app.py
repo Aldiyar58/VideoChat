@@ -16,7 +16,7 @@ CORS(app)
 app.config['SECRET_KEY'] = "thisismys3cr3tk3yrree"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://default:5lRaUgW1bLzo@ep-square-wind-a4xxqxcv-pooler.us-east-1.aws.neon.tech/verceldb?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-client = OpenAI(api_key=os.getenv('OPENAI_KEY'))
+# client = OpenAI(api_key=os.getenv('OPENAI_KEY'))
 
 db = SQLAlchemy(app)
 
@@ -90,16 +90,16 @@ def find_companion(username, language, language_level):
 def enter_room(room_id, language):
     if room_id not in session:
         return redirect(url_for("entry_checkpoint", room_id=room_id, language=language))
-    prompt = f"дай только пять вопросов на {language} для начало и развите разгавора с другим человеком инстранцом."
-    print(prompt)
-    response = client.chat.completions.create(  # Этот метод отправляет запрос на сервер OpenAI и возвращает ответ.
-        model="gpt-4-turbo-preview",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant designed to output JSON."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    print(response.choices[0].message)
+    # prompt = f"дай только пять вопросов на {language} для начало и развите разгавора с другим человеком инстранцом."
+    # print(prompt)
+    # response = client.chat.completions.create(  # Этот метод отправляет запрос на сервер OpenAI и возвращает ответ.
+    #     model="gpt-4-turbo-preview",
+    #     messages=[
+    #         {"role": "system", "content": "You are a helpful assistant designed to output JSON."},
+    #         {"role": "user", "content": prompt}
+    #     ]
+    # )
+    # print(response.choices[0].message)
 
     return render_template("chatroom.html", room_id=room_id, display_name=session[room_id]["name"],
                            mute_audio=session[room_id]["mute_audio"], mute_video=session[room_id]["mute_video"])
