@@ -95,7 +95,6 @@ def enter_room(room_id, language):
     response = client.chat.completions.create(  # Этот метод отправляет запрос на сервер OpenAI и возвращает ответ.
         model="gpt-4-turbo-preview",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant designed to output JSON."},
             {"role": "user", "content": prompt}
         ]
     )
