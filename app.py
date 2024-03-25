@@ -33,9 +33,11 @@ class Room(db.Model):
         else:
             need_language = 'kaz'
 
-        rooms = cls.query.filter_by(language=need_language).all()
+        rooms = cls.query.all()
+        filtered_rooms = list(filter(lambda ro: ro.language_level == language_level and ro.language == need_language, rooms))
+        print(filtered_rooms)
         if rooms:
-            room = list(filter(lambda ro: ro.language_level == language_level, rooms))[0]
+            room = filtered_rooms[0]
             room.delete()
             return room
         return None
