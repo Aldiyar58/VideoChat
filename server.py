@@ -10,7 +10,7 @@ Payload.max_decode_packets = 200
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = "thisismys3cr3tk3yrree"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://udamf8l8aitfqi:p574879a15710395d4743c7e23911c3a07742edd33b8b3d1fe03306f73e6ab73f@cb4l59cdg4fg1k.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d33oq7f779gjcd'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://default:5lRaUgW1bLzo@ep-square-wind-a4xxqxcv-pooler.us-east-1.aws.neon.tech/verceldb?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
