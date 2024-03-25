@@ -112,7 +112,7 @@ def entry_checkpoint(room_id, language):
         mute_audio = request.form['mute_audio']
         mute_video = request.form['mute_video']
         session[room_id] = {"name": display_name, "language": language, "mute_audio": mute_audio, "mute_video": mute_video}
-        return redirect(url_for("enter_room", room_id=room_id))
+        return redirect(url_for("enter_room", room_id=room_id, language=language))
     return render_template("chatroom_checkpoint.html", room_id=room_id)
 
 
