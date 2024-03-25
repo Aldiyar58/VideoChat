@@ -98,7 +98,7 @@ def enter_room(room_id, language):
         ]
     )
     txt = response.choices[0].message.content
-    txt = txt.replace('\n', '<br>')
+    # txt = txt.replace('\n', '<br>')
     return render_template("chatroom.html",
                            room_id=room_id,
                            display_name=session[room_id]["name"],
