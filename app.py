@@ -21,6 +21,71 @@ client = OpenAI(api_key=os.getenv('OPENAI_KEY'))
 db = SQLAlchemy(app)
 
 
+from uuid import uuid4
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import IntegrityError, OperationalError
+from sqlalchemy import not_
+
+
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.String(), primary_key=True, default=str(uuid4()))
+    email = db.Column(db.String(150), nullable=False)
+    password = db.Column(db.Text)
+    language = db.Column(db.String(3))
+
+    def __repr__(self):
+        return f'<User "{self.id}">'
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    @classmethod
+    def get_user_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
+
+    @classmethod
+    def get_all_user_email(cls):
+        real_users = cls.query.filter(not_(cls.email.contains('example'))).all()
+        return [user.email for user in real_users]
+
+    @classmethod
+    def update_email(cls, email, new_email, password):
+        user = cls.query.filter_by(email=email).first()
+        if user and user.check_password(password):
+            user.email = new_email
+            try:
+                db.session.commit()
+                return True
+            except (IntegrityError, OperationalError):
+                db.session.rollback()
+                return False
+        return False
+
+    @classmethod
+    def update_password(cls, email, password, new_password):
+        user = cls.get_user_by_email(email)
+        if user and user.check_password(password):
+            try:
+                user.set_password(new_password)
+                db.session.commit()
+                return True
+            except (IntegrityError, OperationalError):
+                db.session.rollback()
+        return False
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
 class Room(db.Model):
     __tablename__ = 'room'
     room_id = db.Column(db.String(), primary_key=True)
@@ -70,6 +135,10 @@ def index():
 def set_language():
     return render_template("setlang.html")
 
+
+@app.route("/signup", methods=['GET', 'POST'])
+def sign_up():
+    return render_template("signup.html")
 
 @app.route("/find/companion/<string:username>/<string:language>/<int:language_level>/", methods=["GET", "POST"])
 def find_companion(username, language, language_level):
