@@ -23,22 +23,21 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Chat [{{room_id}}]</title>
+    <title>Языковая рулетка [{{room_id}}]</title>
 </head>
 <body>
 
     <div class="heading mb-4">
-        <h1 class="display-4">Video Chat</h1>        
-        <h4>You are about to join room: <span class="heading-mark">{{room_id}}</span></h4>
+        <h1 class="display-4">Языковая рулетка</h1>
+        <h4>Комната: <span class="heading-mark">{{room_id}}</span></h4>
     </div>
 
     <div class="container text-center mt-5">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-6 mb-5">
-                <h4>What should others see you as?</h4>
+                <h4>Как другие должны видеть вас?</h4>
                 <p>
-                    Enter a Name that your friends will be able to recognize you with <br>
-                    This name will be displayed to others!
+                    Введите ваш никнейм
                 </p>
                 <form method="POST" onsubmit="return validate()" class="form shadow" style="max-width:400px; margin-left: auto; margin-right: auto;">
                     <div class="input-group mb-3">
@@ -54,7 +53,7 @@
 
             <div class="col-sm-12 col-md-12 col-lg-6">
                 <div id="permission_alert" class="alert alert-danger" role="alert" style="display: none; background-color: rgb(255, 130, 130); color: rgb(153, 32, 32);">
-                    <strong>Please allow camera and mic permissions!</strong> 
+                    <strong>разришите камеру и микрофон!</strong>
                 </div>                
                 <div class="shadow p-0">
                     <div class="vid-wrapper" style="width: 100%; background-color: rgb(20,20,20);">
@@ -63,12 +62,12 @@
                     <div class="p-3 w-100 bg-light" >
                         <button id="bttn_mute" class="btn btn-lg btn-outline-secondary rounded-circle mx-3">
                             <span id="mute_icon" class="material-icons pt-2">
-                                mic
+                                микровон
                             </span>
                         </button>
                         <button id="bttn_vid_mute"class="btn btn-lg btn-outline-secondary rounded-circle mx-3">
                             <span id="vid_mute_icon" class="material-icons pt-2">
-                                videocam
+                                камера
                             </span>
                         </button>
                     </div>
