@@ -127,5 +127,83 @@
 
         </div>
     </div>
+<script>
+// Add the CSS for the animation
+let style = document.createElement('style');
+style.innerHTML = `
+@keyframes slideDown {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(0); }
+}
+.alert {
+    animation: slideDown 0.5s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+}
+`;
+document.head.appendChild(style);
+
+document.getElementById('quizForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    let score = 0;
+    const correctAnswers = ['exampleRadio1', 'exampleRadio6', 'exampleRadio11'];
+
+    correctAnswers.forEach((answer, index) => {
+        if (document.getElementById(answer).checked) {
+            score++;
+        }
+    });
+
+    // Create the alert div
+    let alertDiv = document.createElement('div');
+    alertDiv.className = 'alert d-flex align-items-center';
+    alertDiv.role = 'alert';
+
+    // Change the alert color based on the score
+    if (score < 3) {
+        alertDiv.classList.add('alert-danger');
+        setTimeout(function (){},3000)
+        window.location.href = '';
+    } else {
+        alertDiv.classList.add('alert-success');
+        setTimeout(function (){},3000)
+        window.location.href = '';
+    }
+
+    // Create the SVG
+    let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'bi flex-shrink-0 me-2');
+    svg.setAttribute('width', '24');
+    svg.setAttribute('height', '24');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Success:');
+
+    // Create the use element for the SVG
+    let use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('xlink:href', '#check-circle-fill');
+    svg.appendChild(use);
+
+    // Create the div for the text
+    let textDiv = document.createElement('div');
+    textDiv.textContent = `Your score is ${score} out of ${correctAnswers.length}`;
+
+    // Append the SVG and text div to the alert div
+    alertDiv.appendChild(svg);
+    alertDiv.appendChild(textDiv);
+
+    // Append the alert div to the body (or wherever you want it to appear)
+    document.body.appendChild(alertDiv);
+
+    // Remove the alert after 3 seconds
+    setTimeout(function() {
+        document.body.removeChild(alertDiv);
+    }, 3000);
+});
+
+</script>
 </body>
 </html>
