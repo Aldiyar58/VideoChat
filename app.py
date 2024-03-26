@@ -165,12 +165,13 @@ def set_language():
     return render_template("setlang.html")
 
 
-@app .route('/test/<string:language>')
+@app .route('/test/<string:language>/')
 def test(language):
     if language == 'kaz':
         return render_template('testkaz.html')
     else:
         return render_template('testeng.html')
+
 
 @app.route("/signup", methods=['GET', 'POST'])
 def sign_up():
