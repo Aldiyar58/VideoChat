@@ -165,6 +165,13 @@ def set_language():
     return render_template("setlang.html")
 
 
+@app .route('/test/<string:language>')
+def test(language):
+    if language == 'kaz':
+        return render_template('testkaz.html')
+    else:
+        return render_template('testeng.html')
+
 @app.route("/signup", methods=['GET', 'POST'])
 def sign_up():
     if request.method == "POST":
@@ -177,6 +184,7 @@ def sign_up():
         new_userk.set_password(password=request.form['password'])
         new_userk.save()
         session['UserEmail'] = new_userk.email
+        return redirect(url_for(endpoint="test", language=request.form['language']))
     return render_template("signup.html")
 
 
