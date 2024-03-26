@@ -194,8 +194,8 @@ def sign_up():
     return render_template("signup.html")
 
 
-@app.route("/find/companion/<string:language>/<int:language_level>/", methods=["GET", "POST"])
-def find_companion(language, language_level):
+@app.route("/find/companion/<string:username>/<string:language>/<int:language_level>/", methods=["GET", "POST"])
+def find_companion(username, language, language_level):
     room = Room.find_suitable_room(language=language, language_level=language_level)  # todo: companion should be one level higher
     if room:
         return redirect(url_for(endpoint="enter_room", room_id=room.room_id, language=language))
@@ -203,6 +203,7 @@ def find_companion(language, language_level):
         room_id = os.urandom(5).hex()
         new_room = Room(
             room_id=room_id,
+            username=username,
             language=language,
             language_level=language_level
         )
