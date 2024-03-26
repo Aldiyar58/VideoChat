@@ -67,7 +67,7 @@ def index():
 
 
 @app.route("/set/language", methods=["GET", "POST"])
-def index():
+def set_language():
     return render_template("setlang.html")
 
 
