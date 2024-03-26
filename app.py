@@ -140,6 +140,7 @@ def set_language():
 def sign_up():
     return render_template("signup.html")
 
+
 @app.route("/find/companion/<string:username>/<string:language>/<int:language_level>/", methods=["GET", "POST"])
 def find_companion(username, language, language_level):
     room = Room.find_suitable_room(language=language, language_level=language_level)  # todo: companion should be one level higher
