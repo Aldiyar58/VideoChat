@@ -21,18 +21,52 @@ client = OpenAI(api_key=os.getenv('OPENAI_KEY'))
 db = SQLAlchemy(app)
 
 
-from uuid import uuid4
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError, OperationalError
-from sqlalchemy import not_
 
 
-class User(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.String(), primary_key=True, default=str(uuid4()))
+user_word = db.Table('userk_word',
+                     db.Column('id', db.Integer, primary_key=True),
+                     db.Column('userk_id', db.Integer, db.ForeignKey('userk.id')),
+                     db.Column('word_id', db.Integer, db.ForeignKey('word.id'))
+                     )
+
+
+class Word(db.Model):
+    __tablename__ = 'word'
+    id = db.Column(db.Integer(), primary_key=True)
+    org_word = db.Column(db.String(150), nullable=False)
+    trans_word = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return f'<Word "{self.id}">'
+
+    @classmethod
+    def get_word_by_kaz_word(cls, kaz_word):
+        return cls.query.filter_by(kaz_word=kaz_word).all()
+
+    @classmethod
+    def get_word_by_trans_word(cls, trans_word):
+        return cls.query.filter_by(trans_word=trans_word).all()
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+class Userk(db.Model):
+    __tablename__ = 'userk'
+    id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(150), nullable=False)
+    firstname = db.Column(db.String(50), nullable=False)
+    lastname = db.Column(db.String(50), nullable=False)
+    language = db.Column(db.String(100))
     password = db.Column(db.Text)
-    language = db.Column(db.String(3))
+    words = db.relationship('Word', secondary=user_word, backref='words')
 
     def __repr__(self):
         return f'<User "{self.id}">'
@@ -46,11 +80,6 @@ class User(db.Model):
     @classmethod
     def get_user_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
-
-    @classmethod
-    def get_all_user_email(cls):
-        real_users = cls.query.filter(not_(cls.email.contains('example'))).all()
-        return [user.email for user in real_users]
 
     @classmethod
     def update_email(cls, email, new_email, password):
@@ -138,6 +167,16 @@ def set_language():
 
 @app.route("/signup", methods=['GET', 'POST'])
 def sign_up():
+    if request.method == "POST":
+        new_userk = Userk(
+            email=request.form['email'],
+            firstname=request.form['firstname'],
+            lastname=request.form['lastname'],
+            language=request.form['language']
+        )
+        new_userk.set_password(password=request.form['password'])
+        new_userk.save()
+        session['UserEmail'] = new_userk.email
     return render_template("signup.html")
 
 
